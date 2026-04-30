@@ -1,125 +1,172 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Mail, Lock, User, UserCircle } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Mail, Lock, User, UserCircle, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { handleRegister } from '@/lib/auth';
 
+// Define validation schema
+const registerSchema = z.object({
+  firstName: z.string().min(2, "First name is too short"),
+  lastName: z.string().min(2, "Last name is too short"),
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+type RegisterInput = z.infer<typeof registerSchema>;
+
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    username: '',
-    email: '',
-    password: ''
+  const [showPassword, setShowPassword] = useState(false);
+  const [serverError, setServerError] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegisterInput>({
+    resolver: zodResolver(registerSchema),
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const onRegisterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
-
+  const onSubmit = async (data: RegisterInput) => {
+    setServerError('');
     try {
-      await handleRegister(formData);
+      await handleRegister(data);
     } catch (err: any) {
-      setError(err.message || "Something went wrong during registration.");
-    } finally {
-      setIsLoading(false);
+      setServerError(err.message || "Registration failed. Please try again.");
     }
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center overflow-hidden bg-white">
-      {/* Form Section */}
-      <div className="container mx-auto px-6 lg:px-20 z-20">
-        <div className="max-w-xl">
-          <header className="mb-8">
-            <p className="text-gray-600 font-medium">Join Our Community</p>
-            <h1 className="text-4xl font-bold text-black mt-1">Create Account</h1>
+    <div className="relative min-h-screen w-full flex items-center bg-slate-50 overflow-hidden">
+      {/* Background Decoration */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-100 rounded-full blur-3xl opacity-50" />
+      
+      <div className="container mx-auto px-6 lg:px-20 z-10 flex justify-between items-center">
+        <div className="max-w-xl w-full bg-white p-8 md:p-12 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
+          <header className="mb-10 text-center md:text-left">
+            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Create Account</h1>
+            <p className="text-slate-500 mt-2">Join us and start managing your workspace.</p>
           </header>
 
-          <form onSubmit={onRegisterSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {error && (
-              <div className="md:col-span-2 p-3 text-sm text-red-500 bg-red-50 rounded-lg border border-red-100">
-                {error}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {serverError && (
+              <div className="p-4 text-sm text-red-600 bg-red-50 rounded-xl border border-red-100 animate-in fade-in zoom-in duration-300">
+                {serverError}
               </div>
             )}
 
-            {/* First Name */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold">First Name</label>
-              <div className="relative">
-                <input name="firstName" required onChange={handleChange} className="w-full px-4 py-3 bg-blue-50/50 border border-transparent rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="John" />
-                <User className="absolute right-4 top-3 text-gray-400 w-5 h-5" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* First Name */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold text-slate-700 ml-1">First Name</label>
+                <div className="relative group">
+                  <input
+                    {...register('firstName')}
+                    className={`w-full pl-4 pr-11 py-3.5 bg-slate-50 border ${errors.firstName ? 'border-red-300' : 'border-slate-200'} rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all duration-200`}
+                    placeholder="John"
+                  />
+                  <User className="absolute right-4 top-3.5 text-slate-400 w-5 h-5 group-focus-within:text-indigo-500" />
+                </div>
+                {errors.firstName && <p className="text-xs text-red-500 ml-1">{errors.firstName.message}</p>}
               </div>
-            </div>
 
-            {/* Last Name */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold">Last Name</label>
-              <div className="relative">
-                <input name="lastName" required onChange={handleChange} className="w-full px-4 py-3 bg-blue-50/50 border border-transparent rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="Doe" />
-                <User className="absolute right-4 top-3 text-gray-400 w-5 h-5" />
+              {/* Last Name */}
+              <div className="space-y-1.5">
+                <label className="text-sm font-semibold text-slate-700 ml-1">Last Name</label>
+                <div className="relative group">
+                  <input
+                    {...register('lastName')}
+                    className={`w-full pl-4 pr-11 py-3.5 bg-slate-50 border ${errors.lastName ? 'border-red-300' : 'border-slate-200'} rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all duration-200`}
+                    placeholder="Doe"
+                  />
+                  <User className="absolute right-4 top-3.5 text-slate-400 w-5 h-5 group-focus-within:text-indigo-500" />
+                </div>
+                {errors.lastName && <p className="text-xs text-red-500 ml-1">{errors.lastName.message}</p>}
               </div>
             </div>
 
             {/* Username */}
-            <div className="md:col-span-2 space-y-2">
-              <label className="text-sm font-semibold">Username</label>
-              <div className="relative">
-                <input name="username" required onChange={handleChange} className="w-full px-4 py-3 bg-blue-50/50 border border-transparent rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="john_doe" />
-                <UserCircle className="absolute right-4 top-3 text-gray-400 w-5 h-5" />
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-slate-700 ml-1">Email</label>
+              <div className="relative group">
+                <input
+                  {...register('username')}
+                  className={`w-full pl-4 pr-11 py-3.5 bg-slate-50 border ${errors.username ? 'border-red-300' : 'border-slate-200'} rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all duration-200`}
+                  placeholder="johndoe_99"
+                />
+                <UserCircle className="absolute right-4 top-3.5 text-slate-400 w-5 h-5 group-focus-within:text-indigo-500" />
               </div>
+              {errors.username && <p className="text-xs text-red-500 ml-1">{errors.username.message}</p>}
             </div>
 
             {/* Email */}
-            <div className="md:col-span-2 space-y-2">
-              <label className="text-sm font-semibold">Email</label>
-              <div className="relative">
-                <input name="email" type="email" required onChange={handleChange} className="w-full px-4 py-3 bg-blue-50/50 border border-transparent rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="john@example.com" />
-                <Mail className="absolute right-4 top-3 text-gray-400 w-5 h-5" />
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
+              <div className="relative group">
+                <input
+                  {...register('email')}
+                  type="email"
+                  className={`w-full pl-4 pr-11 py-3.5 bg-slate-50 border ${errors.email ? 'border-red-300' : 'border-slate-200'} rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all duration-200`}
+                  placeholder="name@company.com"
+                />
+                <Mail className="absolute right-4 top-3.5 text-slate-400 w-5 h-5 group-focus-within:text-indigo-500" />
               </div>
+              {errors.email && <p className="text-xs text-red-500 ml-1">{errors.email.message}</p>}
             </div>
 
             {/* Password */}
-            <div className="md:col-span-2 space-y-2">
-              <label className="text-sm font-semibold">Password</label>
-              <div className="relative">
-                <input name="password" type="password" required onChange={handleChange} className="w-full px-4 py-3 bg-blue-50/50 border border-transparent rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="••••••••" />
-                <Lock className="absolute right-4 top-3 text-gray-400 w-5 h-5" />
+            <div className="space-y-1.5">
+              <label className="text-sm font-semibold text-slate-700 ml-1">Password</label>
+              <div className="relative group">
+                <input
+                  {...register('password')}
+                  type={showPassword ? "text" : "password"}
+                  className={`w-full pl-4 pr-11 py-3.5 bg-slate-50 border ${errors.password ? 'border-red-300' : 'border-slate-200'} rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all duration-200`}
+                  placeholder="••••••••"
+                />
+                <button 
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-3.5 text-slate-400 hover:text-indigo-500 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
+              {errors.password && <p className="text-xs text-red-500 ml-1">{errors.password.message}</p>}
             </div>
 
             <button
               type="submit"
-              disabled={isLoading}
-              className="md:col-span-2 mt-4 py-4 bg-[#4338CA] hover:bg-[#3730A3] disabled:bg-indigo-300 text-white font-bold rounded-xl shadow-lg transition-all"
+              disabled={isSubmitting}
+              className="w-full mt-4 py-4 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
             >
-              {isLoading ? "Creating Account..." : "Register"}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="animate-spin" size={20} />
+                  Creating Account...
+                </>
+              ) : "Register"}
             </button>
+
+            <p className="text-center text-slate-500 text-sm mt-6">
+              Already have an account? <a href="/login" className="text-indigo-600 font-bold hover:underline">Log in</a>
+            </p>
           </form>
         </div>
-      </div>
 
-      {/* Same Background Styling as SignIn */}
-      <div className="absolute right-0 top-0 h-full w-1/2 hidden lg:block opacity-20 lg:opacity-100">
-        <div 
-          className="absolute inset-0 z-10"
-          style={{
-            clipPath: 'polygon(20% 0%, 100% 0%, 100% 100%, 0% 100%, 30% 50%)',
-            borderLeft: '2px solid #A78BFA'
-          }}
-        />
-        <img 
-          src="https://www.kshrd.com.kh/_next/image?url=https%3A%2F%2Frustfs.kshrd.app%2Fhrd-website-image%2Fpublic%2Fall-gen-img%2F12-basic.jpg&w=3840&q=75" 
-          alt="Workspace" 
-          className="h-full w-full object-cover"
-        />
+        {/* Decorative Right Panel */}
+        <div className="hidden lg:flex flex-col items-center justify-center w-1/2 ml-20 text-center">
+          <div className="w-full max-w-md aspect-square bg-indigo-600 rounded-[3rem] rotate-3 flex items-center justify-center relative shadow-2xl">
+             <div className="absolute inset-0 bg-white/10 backdrop-blur-3xl rounded-[3rem] -rotate-6" />
+             <div className="relative z-10 text-white p-10">
+                <h2 className="text-3xl font-bold mb-4">Start your journey with us.</h2>
+                <p className="text-indigo-100">The best way to manage your tasks, collaboration, and progress in one clean dashboard.</p>
+             </div>
+          </div>
+        </div>
       </div>
     </div>
   );

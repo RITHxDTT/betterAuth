@@ -2,56 +2,72 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Menu } from "lucide-react";
 
 export default function Navigation() {
   const pathname = usePathname();
 
-  const isActive = (path: string) => {
-    return pathname === path;
-  };
+  const isActive = (path: string) => pathname === path;
 
   return (
-    <header className="bg-white backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex items-center space-x-3">
-             <img
-                src="/logo.png"
-                alt="HRD Room Logo"
-                // className="h-full w-full object-cover"
-                width={25}
-                height={25}
-              />
-            <span className="text-xl font-bold text-gray-900">
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-neutral-200">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex items-center justify-between h-16">
+
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="logo" className="w-7 h-7" />
+            <span className="text-lg font-semibold text-neutral-900 tracking-tight">
               HRD Room
             </span>
           </Link>
 
-          <nav className="flex items-center space-x-6">
+          {/* Center Nav */}
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             <Link
               href="/"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive("/")
-                  ? "text-indigo-600 bg-indigo-50"
-                  : "text-gray-600 hover:text-gray-900"
-                }`}
+              className={`transition ${
+                isActive("/")
+                  ? "text-black"
+                  : "text-neutral-500 hover:text-black"
+              }`}
             >
               Home
             </Link>
 
             <Link
               href="/dashboard"
-              className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+              className={`transition ${
+                isActive("/dashboard")
+                  ? "text-black"
+                  : "text-neutral-500 hover:text-black"
+              }`}
             >
               Dashboard
             </Link>
+          </nav>
 
+          {/* Right Actions */}
+          <div className="flex items-center gap-3">
             <Link
               href="/auth/login"
-              className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              className="text-sm text-neutral-600 hover:text-black transition"
             >
-              Sign In
+              Sign in
             </Link>
-          </nav>
+
+            <Link
+              href="/auth/register"
+              className="px-4 py-2 text-sm font-medium rounded-full bg-black text-white hover:bg-neutral-800 transition"
+            >
+              Get Started
+            </Link>
+
+            {/* Mobile menu icon (future use) */}
+            <button className="md:hidden p-2 rounded-md hover:bg-neutral-100">
+              <Menu className="w-5 h-5 text-neutral-700" />
+            </button>
+          </div>
         </div>
       </div>
     </header>
