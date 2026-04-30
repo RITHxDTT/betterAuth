@@ -1,3 +1,12 @@
+import { betterAuth } from "better-auth";
+import { authClient } from "./auth-client";
+
+export const auth = betterAuth({
+    emailAndPassword : {
+        enabled: true,
+    }
+})
+
 export default async function handleSignIn(credentials: {email: string, password: string}) {
     try {
       
