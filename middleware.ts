@@ -1,57 +1,30 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export default async function middleware(request: NextRequest) {
-    console.log("[Middleware] Path:", request.nextUrl.pathname);
-    console.log("[Middleware] Cookies:", request.cookies.getAll());
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get("token")?.value;
 
-    const sessionToken = request.cookies.get("better-auth.session_token")?.value
-        || request.cookies.get("better-auth-token")?.value;
+  const { pathname } = request.nextUrl;
 
-    console.log("[Middleware] Session Token:", sessionToken ? "exists" : "none");
+  const isProtected =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/view");
 
-    if (!sessionToken) {
-        console.log("[Middleware] No token, redirecting to /login");
-        return NextResponse.redirect(new URL("/login", request.url));
-    }
+  const isAuth = pathname.startsWith("/auth");
 
-    // Validate session by calling better-auth API directly
-    try {
-        const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-        const res = await fetch(`${baseURL}/api/auth/get-session`, {
-            headers: {
-                Cookie: `better-auth.session_token=${sessionToken}`,
-            },
-        });
+  console.log("MW:", pathname, "TOKEN:", !!token);
 
-        console.log("[Middleware] Session API response:", res.status);
+  if (isProtected && !token) {
+    return NextResponse.redirect(new URL("/auth/login", request.url));
+  }
 
-        if (!res.ok) {
-            console.log("[Middleware] Invalid session, redirecting to /login");
-            return NextResponse.redirect(new URL("/login", request.url));
-        }
+  if (isAuth && token) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
 
-        const session = await res.json();
-        console.log("[Middleware] Session data:", session);
-
-        if (!session || !session.user) {
-            console.log("[Middleware] No user in session, redirecting to /login");
-            return NextResponse.redirect(new URL("/login", request.url));
-        }
-
-        console.log("[Middleware] Session valid, allowing access");
-        return NextResponse.next();
-    } catch (error) {
-        console.log("[Middleware] Error:", error);
-        return NextResponse.redirect(new URL("/login", request.url));
-    }
+  return NextResponse.next();
 }
 
-// THIS is what protects your pages automatically
 export const config = {
-    matcher: [
-        "/dashboard/:path*",
-        "/dashboard",
-        "/view/:path*",
-        "/view"
-    ],
+  matcher: ["/dashboard/:path*", "/view/:path*", "/auth/:path*"],
 };

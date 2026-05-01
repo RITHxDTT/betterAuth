@@ -2,8 +2,11 @@
 
 import React, { useState } from "react";
 import { Mail, Eye, EyeOff, Lock, Loader2 } from "lucide-react";
-import handleSignIn from "@/lib/auth";
+
+
+
 import { useRouter } from "next/navigation";
+import { handleSignIn } from "@/lib/auth";
 
 export default function SignInPage() {
   const [isLoading, setLoading] = useState(false);
@@ -11,24 +14,35 @@ export default function SignInPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.currentTarget);
+
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  try {
     setLoading(true);
-    setError("");
 
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    // await handleSignIn({ email, password });
+    const data = await handleSignIn({ email, password });
 
-    try {
-      await handleSignIn({ email, password });
-      router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "An error occurred during sign in.");
-    } finally {
-      setLoading(false);
+    if (!data?.payload?.access_token) {
+      throw new Error("No access token returned");
     }
-  };
+
+    router.refresh();
+    router.push("/dashboard");
+  } catch (err: any) {
+    setError(err.message || "Login failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
+  
+
 
   return (
     <div className="relative min-h-screen w-full flex items-center bg-slate-50 overflow-hidden">
@@ -66,7 +80,7 @@ export default function SignInPage() {
                   type="email"
                   required
                   placeholder="name@company.com"
-                  className="w-full pl-4 pr-11 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all duration-200"
+                  className="text-black w-full pl-4 pr-11 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all duration-200"
                 />
                 <Mail className="absolute right-4 top-3.5 text-slate-400 w-5 h-5 group-focus-within:text-indigo-500" />
               </div>
@@ -83,7 +97,7 @@ export default function SignInPage() {
                   type={showPassword ? "text" : "password"}
                   required
                   placeholder="••••••••"
-                  className="w-full pl-4 pr-11 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all duration-200"
+                  className="text-black w-full pl-4 pr-11 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all duration-200"
                 />
                 <button
                   type="button"

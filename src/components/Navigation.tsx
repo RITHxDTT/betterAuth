@@ -1,13 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, LogOut, User } from "lucide-react";
 
-export default function Navigation() {
+export default function Navigation({ session }: { session: boolean }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const isActive = (path: string) => pathname === path;
+
+  const signOut = async () => {
+  await fetch("/api/logout", { method: "POST" });
+
+  // 🔥 CRITICAL: force server re-evaluation
+  // 2. Refresh the current route's data (clears 'session' prop)
+  router.refresh(); 
+
+  // 3. Redirect afterward
+  router.push("/auth/login");
+};
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-neutral-200">
@@ -16,57 +28,58 @@ export default function Navigation() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.png" alt="logo" className="w-7 h-7" />
-            <span className="text-lg font-semibold text-neutral-900 tracking-tight">
-              HRD Room
-            </span>
+            <img src="/logo.png" className="w-7 h-7" />
+            <span className="text-lg font-semibold">HRD Room</span>
           </Link>
 
-          {/* Center Nav */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link
-              href="/"
-              className={`transition ${
-                isActive("/")
-                  ? "text-black"
-                  : "text-neutral-500 hover:text-black"
-              }`}
-            >
-              Home
-            </Link>
+          {/* Nav */}
+          <nav className="hidden md:flex gap-6 text-sm">
+            {session && (
+              <>
+                <Link
+                  href="/view"
+                  className={isActive("/view") ? "text-black" : "text-gray-500"}
+                >
+                  Home
+                </Link>
 
-            <Link
-              href="/dashboard"
-              className={`transition ${
-                isActive("/dashboard")
-                  ? "text-black"
-                  : "text-neutral-500 hover:text-black"
-              }`}
-            >
-              Dashboard
-            </Link>
+                <Link
+                  href="/dashboard"
+                  className={isActive("/dashboard") ? "text-black" : "text-gray-500"}
+                >
+                  Dashboard
+                </Link>
+              </>
+            )}
           </nav>
 
-          {/* Right Actions */}
+          {/* Actions */}
           <div className="flex items-center gap-3">
-            <Link
-              href="/auth/login"
-              className="text-sm text-neutral-600 hover:text-black transition"
-            >
-              Sign in
-            </Link>
 
-            <Link
-              href="/auth/register"
-              className="px-4 py-2 text-sm font-medium rounded-full bg-black text-white hover:bg-neutral-800 transition"
-            >
-              Get Started
-            </Link>
+            {!session ? (
+              <>
+                <Link href="/auth/login">Sign in</Link>
+              </>
+            ) : (
+              <div className="flex items-center gap-4">
 
-            {/* Mobile menu icon (future use) */}
-            <button className="md:hidden p-2 rounded-md hover:bg-neutral-100">
-              <Menu className="w-5 h-5 text-neutral-700" />
+                <Link href="/view/profile-user" className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Profile
+                </Link>
+
+                <button onClick={signOut} className="flex items-center gap-2">
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+
+              </div>
+            )}
+
+            <button className="md:hidden">
+              <Menu />
             </button>
+
           </div>
         </div>
       </div>
