@@ -3,23 +3,26 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, LogOut, User } from "lucide-react";
+import { useSession } from "@/lib/useSession";
 
-export default function Navigation({ session }: { session: boolean }) {
+export default function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
+  const { data, refresh } = useSession();
+  const sessionData = data?.user;
 
   const isActive = (path: string) => pathname === path;
 
   const signOut = async () => {
   await fetch("/api/logout", { method: "POST" });
 
-  // 🔥 CRITICAL: force server re-evaluation
-  // 2. Refresh the current route's data (clears 'session' prop)
+  
   router.refresh(); 
 
-  // 3. Redirect afterward
+  
   router.push("/auth/login");
 };
+
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-neutral-200">
@@ -34,7 +37,7 @@ export default function Navigation({ session }: { session: boolean }) {
 
           {/* Nav */}
           <nav className="hidden md:flex gap-6 text-sm">
-            {session && (
+            {sessionData && (
               <>
                 <Link
                   href="/view"
@@ -56,7 +59,7 @@ export default function Navigation({ session }: { session: boolean }) {
           {/* Actions */}
           <div className="flex items-center gap-3">
 
-            {!session ? (
+            {!sessionData ? (
               <>
                 <Link href="/auth/login">Sign in</Link>
               </>
