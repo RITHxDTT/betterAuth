@@ -32,7 +32,7 @@ export default async function RootLayout({
   return (
     <html>
       <body>
-        <Navigation session={!!token} />
+        <Navigation/>
         {children}
       </body>
     </html>

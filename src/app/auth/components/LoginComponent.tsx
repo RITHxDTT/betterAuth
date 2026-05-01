@@ -7,12 +7,14 @@ import { Mail, Eye, EyeOff, Lock, Loader2 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { handleSignIn } from "@/lib/auth";
+import { useSession } from "@/lib/useSession";
 
 export default function SignInPage() {
   const [isLoading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+    const {  refresh } = useSession();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
@@ -21,12 +23,14 @@ export default function SignInPage() {
 
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+   
 
   try {
     setLoading(true);
 
     // await handleSignIn({ email, password });
     const data = await handleSignIn({ email, password });
+    await refresh();
 
     if (!data?.payload?.access_token) {
       throw new Error("No access token returned");
