@@ -47,7 +47,7 @@ export async function handleRegister(data: RegisterData) {
 
   console.log("REGISTER DEBUG:", res.status, resData);
 
-  // 🔥 THIS IS THE KEY
+  
   if (!res.ok) {
     throw new Error(resData?.message || "Registration failed");
   }

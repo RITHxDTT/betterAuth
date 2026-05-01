@@ -1,211 +1,72 @@
-"use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+"use client"
 
+import SideBarComponent from '../../components/SideBarComponent'
+// import AnalyticsChart from '../dashboard/AnalyticsChart'
+import dynamic from 'next/dynamic';
 
-
-export default function DashboardClientPage() {
-  const router = useRouter();
-  const isSignout = async () => {
-    
-    router.push("/auth/login");
-  }
-
-
-  const handleSignOut = async () => {
-    alert("Signed out");
-  };
-
+// Disable Server-Side Rendering for the chart
+const AnalyticsChart = dynamic(() => import('../dashboard/AnalyticsChart'), { 
+  ssr: false,
+  loading: () => <div className="h-64 w-full bg-slate-50 animate-pulse rounded-xl" />
+});
+export default function Dashboard() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/*main content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pt-20">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Welcome to Your Dashboard!
-                </h2>
-                <p className="text-gray-600">
-                  Manage your account and explore better-auth features
-                </p>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-3">
-                  <img
-                    className="h-10 w-10 rounded-full"
-                    src={
-                      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-                    }
-                  />
-                  <div className="text-sm">
-                    <p className="text-gray-900 font-medium">John Doe</p>
-                    <p className="text-gray-500">email@gmail.com</p>
-                  </div>
-                </div>
-                <button
-                  onClick={isSignout}
-                  className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-                >
-                  Sign Out
-                </button>
-              </div>
-            </div>
+    <div className="flex bg-[#F8FAFC] min-h-screen">
+      
 
-            {/*authentication infor */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <h3 className="text-lg font-medium text-blue-900 mb-2">
-                Authentication Status
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="font-medium text-blue-700">Status:</span>
-                  <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Authenticated
-                  </span>
-                </div>
-                <div>
-                  <span className="font-medium text-blue-700">Provider:</span>
-                  <span className="ml-2 text-blue-600">Better-Auth</span>
-                </div>
-                <div>
-                  <span className="font-medium text-blue-700">User ID:</span>
-                  <span className="ml-2 text-blue-600">1234566</span>
-                </div>
-                <div>
-                  <span className="font-medium text-blue-700">
-                    Email Verified:
-                  </span>
-                  <span className="ml-2 text-blue-600">Yes</span>
-                </div>
-              </div>
-            </div>
+      <main className="flex-1 p-8 overflow-y-auto">
+        <header className="mb-8">
+          <h2 className="text-2xl font-bold text-slate-800">Dashboard</h2>
+          <p className="text-slate-500">Welcome back, Prof. Anderson. Here's your campus summary.</p>
+        </header>
 
-            {/*  Features */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="bg-gray-50 rounded-lg p-6">
-                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                  <svg
-                    className="w-6 h-6 text-indigo-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+          <StatCard title="Total Task" value="10" color="bg-indigo-600" textColor="text-white" />
+          <StatCard title="Total In Progress" value="56" color="bg-blue-50" textColor="text-blue-600" />
+          <StatCard title="On-Time Submission" value="56" color="bg-green-50" textColor="text-green-600" />
+          <StatCard title="Total Submission" value="56" color="bg-orange-50" textColor="text-orange-600" />
+          <StatCard title="Total Submission" value="56" color="bg-red-50" textColor="text-red-600" />
+        </div>
+
+        <div className="grid grid-cols-12 gap-6">
+          {/* Chart Section - Placeholder */}
+          <div className="col-span-8 bg-white p-6 rounded-3xl border border-slate-100 h-80">
+             <h3 className="font-semibold mb-4 text-slate-700">Analytics</h3>
+             <div className="w-full h-full bg-slate-50 rounded-xl flex items-center justify-center text-slate-300">
+                <AnalyticsChart />
+             </div>
+          </div>
+
+          {/* Recent Task Widget */}
+          <div className="col-span-4 bg-white p-6 rounded-3xl border border-slate-100 flex flex-col justify-between bg-gradient-to-br from-white to-blue-50">
+             <div>
+                <div className="flex justify-between items-start mb-6">
+                    <span className="font-semibold text-slate-700">Recent Task</span>
+                    <button className="text-xs border px-2 py-1 rounded-lg">Filter</button>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Social Login
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Seamlessly authenticate with Google, GitHub, and other social
-                  providers.
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-6">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                  <svg
-                    className="w-6 h-6 text-green-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  User Management
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Manage user accounts, profiles, and authentication settings.
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-6">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                  <svg
-                    className="w-6 h-6 text-purple-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Secure Access
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Protected routes and secure authentication flow with
-                  better-auth.
-                </p>
-              </div>
-            </div>
-
-            {/* Demo Actions */}
-            <div className="mt-8 p-6 bg-gray-50 rounded-lg">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Try These Actions
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                <button
-                  onClick={() => alert("Mock action: Profile updated!")}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-                >
-                  Update Profile
-                </button>
-                <button
-                  onClick={() => alert("Mock action: Settings saved!")}
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-                >
-                  Save Settings
-                </button>
-                <button
-                  onClick={() => alert("Mock action: Data exported!")}
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-                >
-                  Export Data
-                </button>
-              </div>
-            </div>
-
-            {/* Navigation */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link
-                  href="/"
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-                >
-                  ← Back to Home
-                </Link>
-                <Link
-                  href="/auth"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-                >
-                  Manage Account
-                </Link>
-              </div>
-            </div>
+                <h4 className="text-xl font-bold text-indigo-900 leading-tight">
+                    Assignment Java Practice01 Right Now?
+                </h4>
+                <p className="text-xs text-slate-400 mt-2">This meeting has 24 students.</p>
+             </div>
+             <button className="w-full bg-indigo-600 text-white py-3 rounded-2xl font-semibold mt-4 shadow-lg shadow-indigo-200">
+                Start Meeting
+             </button>
           </div>
         </div>
       </main>
     </div>
   );
 }
+
+const StatCard = ({ title, value, color, textColor }: any) => (
+  <div className={`${color} p-5 rounded-3xl flex flex-col justify-between min-h-[140px] relative overflow-hidden`}>
+    <p className={`text-xs font-medium ${textColor} opacity-80`}>{title}</p>
+    <p className={`text-3xl font-bold ${textColor} mt-2`}>{value}</p>
+    <div className="mt-4 flex items-center gap-1">
+        <span className={`text-[10px] px-1 bg-white/20 rounded ${textColor}`}>3^</span>
+        <span className={`text-[10px] ${textColor} opacity-70`}>Increase from last task.</span>
+    </div>
+  </div>
+);
