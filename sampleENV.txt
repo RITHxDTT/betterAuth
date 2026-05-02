@@ -1,0 +1,4 @@
+NEXT_PUBLIC_BASE_URL=https://api.yannvanneth.dev/api/v1
+BETTER_AUTH_SECRET=kHAHgO4kdS4CMPf92F568kBRSrnLgrf8
+BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=http://localhost:3000

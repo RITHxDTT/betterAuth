@@ -2,117 +2,140 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, LogOut, User } from "lucide-react";
+import { Menu, LogOut, X } from "lucide-react";
 import { useSession } from "@/lib/useSession";
+import { useState } from "react";
 
 export default function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
-  const { data, refresh } = useSession();
+  const { data } = useSession();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const sessionData = data?.user;
 
   const isActive = (path: string) => pathname === path;
 
   const signOut = async () => {
-  await fetch("/api/logout", { method: "POST" });
+    await fetch("/api/logout", { method: "POST" });
+    router.refresh();
+    router.push("/auth/login");
+  };
 
-  
-  router.refresh(); 
-
-  
-  router.push("/auth/login");
-};
-
+  const navLinks = [
+    { name: "Home", href: "/view" },
+    { name: "Dashboard", href: "/dashboard" },
+  ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/100 backdrop-blur-md border-b border-neutral-200 py-4">
-      <div className="max-w-7xl mx-auto px-6">
+    <header className="sticky top-0 z-50 bg-white border-b border-slate-100 py-2">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
-
+          
           {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.png" className="w-7 h-7" />
-          <span className="text-lg font-semibold">
-            <span className="bg-gradient-to-br from-[#3D38C3] to-[#534FFD] bg-clip-text text-transparent">
-              HRD
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+               <span className="text-white font-bold text-xs">HRD</span>
+            </div>
+            <span className="text-lg font-bold tracking-tight">
+              <span className="text-indigo-600">HRD</span>{" "}
+              <span className="text-slate-900">Room</span>
             </span>
-            {" "} <span className="text-black">Room</span>
-          </span>
-        </Link>
+          </Link>
 
-          {/* Nav */}
-          <nav className="hidden md:flex gap-6 text-sm">
-            {sessionData && (
-              <>
-                <Link
-                  href="/view"
-                  className={isActive("/view") ? "text-black" : "text-gray-500"}
-                >
-                  Home
-                </Link>
-
-                <Link
-                  href="/dashboard"
-                  className={isActive("/dashboard") ? "text-black" : "text-gray-500"}
-                >
-                  Dashboard
-                </Link>
-              </>
-            )}
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex gap-8">
+            {sessionData && navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm font-medium transition-colors ${
+                  isActive(link.href) ? "text-indigo-600" : "text-slate-500 hover:text-slate-900"
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
           </nav>
 
           {/* Actions */}
-       
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-4">
             {!sessionData ? (
-              <>
-                <Link href="/auth/login" className="px-8 py-3 text-white font-semibold rounded-2xl transition-transform hover:scale-105 active:scale-95 bg-gradient-to-br from-[#3D38C3] to-[#534FFD] shadow-lg shadow-indigo-200">Login</Link>
-                <Link href="/auth/register" className="px-8 py-3 text-white font-semibold rounded-2xl transition-transform hover:scale-105 active:scale-95 bg-gradient-to-br from-[#3D38C3] to-[#534FFD] shadow-lg shadow-indigo-200">Register</Link>
-              </>
+              <div className="hidden sm:flex items-center gap-3">
+                <Link href="/auth/login" className="text-sm font-semibold text-slate-600 hover:text-slate-900 px-4">Login</Link>
+                <Link href="/auth/register" className="px-5 py-2.5 text-sm text-white font-semibold rounded-xl bg-indigo-600 shadow-md shadow-indigo-100 transition-transform active:scale-95">
+                  Register
+                </Link>
+              </div>
             ) : (
-              <div className="flex items-center gap-6">
-                
-                {/* Redesigned Profile Link */}
+              <div className="flex items-center gap-3 md:gap-6">
                 <Link 
                   href="/view/profile-user" 
-                  className="flex items-center gap-3 p-1 pr-4 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-100 transition-all group"
+                  className="flex items-center gap-2 p-1 md:pr-4 rounded-full bg-slate-50 hover:bg-slate-100 transition-all border border-transparent hover:border-slate-200"
                 >
-                  <div className="relative">
-                    <img
-                      src={sessionData.image || "https://ui-avatars.com/api/?name=" + sessionData.name}
-                      alt="User Avatar"
-                      className="w-10 h-10 rounded-full border-2 border-white shadow-sm object-cover"
-                    />
-                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
-                  </div>
-                  
-                  <div className="hidden sm:flex flex-col text-left">
-                    <span className="text-sm font-bold text-slate-900 leading-tight group-hover:text-[#3D38C3]">
-                      {sessionData.name || "User"}
-                    </span>
-                    <span className="text-[11px] text-slate-400 leading-tight truncate max-w-[100px]">
-                      {sessionData.email}
-                    </span>
+                  <img
+                    src={sessionData.image || `https://ui-avatars.com/api/?name=${sessionData.name}&background=6366f1&color=fff`}
+                    alt="Avatar"
+                    className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover ring-2 ring-white"
+                  />
+                  <div className="hidden lg:flex flex-col text-left">
+                    <span className="text-xs font-bold text-slate-900 leading-none">{sessionData.name}</span>
+                    <span className="text-[10px] text-slate-400 leading-none mt-1">Student</span>
                   </div>
                 </Link>
 
                 <button 
                   onClick={signOut} 
-                  className="flex items-center gap-2 px-3 py-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                  className="hidden md:flex items-center gap-2 text-slate-400 hover:text-red-500 transition-colors"
                 >
                   <LogOut className="w-5 h-5" />
-                  <span className="text-sm font-medium">Logout</span>
                 </button>
-
               </div>
             )}
 
-            <button className="md:hidden">
-              <Menu />
+            {/* Mobile Menu Toggle */}
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 text-slate-600 md:hidden hover:bg-slate-50 rounded-lg transition-colors"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-100 shadow-xl p-4 flex flex-col gap-4 animate-in slide-in-from-top-2 duration-200">
+          {sessionData ? (
+            <>
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`p-3 rounded-xl text-sm font-semibold ${
+                    isActive(link.href) ? "bg-indigo-50 text-indigo-600" : "text-slate-600"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+              <hr className="border-slate-100" />
+              <button 
+                onClick={signOut}
+                className="flex items-center gap-3 p-3 text-red-500 font-semibold text-sm"
+              >
+                <LogOut size={18} /> Logout
+              </button>
+            </>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <Link href="/auth/login" className="w-full p-3 text-center font-semibold text-slate-600">Login</Link>
+              <Link href="/auth/register" className="w-full p-3 text-center bg-indigo-600 text-white rounded-xl font-semibold">Register</Link>
+            </div>
+          )}
+        </div>
+      )}
     </header>
   );
 }

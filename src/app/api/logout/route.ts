@@ -18,7 +18,7 @@ export async function POST() {
 
   const res = NextResponse.json({ success: true });
 
-  // 🔥 THIS is the important part
+  
   res.cookies.set("token", "", {
     path: "/",
     maxAge: 0,
