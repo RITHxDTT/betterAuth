@@ -1,9 +1,11 @@
 import React from 'react'
+import HRDRoomLanding from '@/components/LandingPageComponent'
 
 export default function page() {
   return (
     <div>
-      this is my testing programming 
+
+        <HRDRoomLanding />      
     </div>
   )
 }
