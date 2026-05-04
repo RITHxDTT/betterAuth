@@ -69,7 +69,7 @@ export default function AuthClientPage() {
             </p>
           </div>
 
-          {/* Error Display */}
+          
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4">
               <div className="flex">
@@ -93,7 +93,7 @@ export default function AuthClientPage() {
             </div>
           )}
 
-          {/* Social Authentication */}
+          
           <div className="space-y-3">
             <button
               onClick={() => handleSocialAuth("google")}
@@ -152,7 +152,7 @@ export default function AuthClientPage() {
             </div>
           </div>
 
-          {/* Email/Password Form */}
+          
           <form onSubmit={handleEmailAuth} className="space-y-4">
             {!isSignIn && (
               <div>
@@ -253,14 +253,14 @@ export default function AuthClientPage() {
             </button>
           </form>
 
-          {/* Toggle between Sign In and Sign Up */}
+          
           <div className="text-center">
             <button
               type="button"
               onClick={() => {
                 setIsSignIn(!isSignIn);
-                setError(""); // Clear any previous errors
-                setName(""); // Clear name when switching modes
+                setError(""); 
+                setName(""); 
               }}
               className="text-indigo-600 hover:text-indigo-500 text-sm font-medium transition-colors"
             >

@@ -10,6 +10,6 @@ export async function GET() {
   }
 
   return NextResponse.json({
-    user: { token }, // later you can decode JWT or fetch user info
+    user: { token }, 
   });
 }

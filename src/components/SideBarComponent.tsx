@@ -10,13 +10,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean, onClose?: () => void }
 
   return (
     <>
-      {/* Mobile Overlay - Closes sidebar when clicking outside */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40 md:hidden"
-          onClick={onClose}
-        />
-      )}
+     
 
       {/* Sidebar Container */}
       <div className={`
@@ -26,7 +20,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean, onClose?: () => void }
         ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         
-        {/* Mobile Close Button */}
+        
         <button 
           onClick={onClose}
           className="md:hidden absolute right-4 top-6 p-2 text-slate-400 hover:text-slate-600"
@@ -34,7 +28,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen?: boolean, onClose?: () => void }
           <X size={20} />
         </button>
 
-        {/* Logo/Header (Optional since you have it in Nav) */}
+        
         <div className="mb-10 pt-2">
           <span className="text-xl font-bold text-indigo-600">HRD</span>
           <span className="text-xl font-bold text-slate-900"> Room</span>

@@ -33,7 +33,7 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Chart Section - Takes full width on mobile/tablet */}
+          
           <div className="lg:col-span-8 bg-white p-5 md:p-6 rounded-[2rem] border border-slate-100 shadow-sm">
              <div className="flex justify-between items-center mb-6">
                 <h3 className="font-bold text-slate-800">Learning Analytics</h3>
@@ -47,7 +47,7 @@ export default function Dashboard() {
              </div>
           </div>
 
-          {/* Recent Task Widget - Stacks below chart on mobile */}
+          
           <div className="lg:col-span-4 bg-white p-6 rounded-[2rem] border border-slate-100 flex flex-col justify-between bg-gradient-to-br from-white to-indigo-50/30 shadow-sm">
              <div>
                 <div className="flex justify-between items-start mb-6">

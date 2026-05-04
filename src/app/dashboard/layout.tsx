@@ -28,10 +28,10 @@ export default async function RootLayout({
     <>
          <div className="flex min-h-screen bg-[#F8FAFC]">
           
-          {/* Sidebar stays fixed on the left */}
+          
           <SideBarComponent />
 
-          {/* Page content scrolls on the right */}
+          
           <main className="flex-1 overflow-y-auto">
             {children}
           </main>

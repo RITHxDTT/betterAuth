@@ -19,7 +19,7 @@ export default function OtpVerification() {
 
   const email = searchParams.get("email");
 
-  // ⏱ cooldown timer
+  // time coldown 
   useEffect(() => {
     if (cooldown === 0) return;
 
@@ -48,7 +48,7 @@ export default function OtpVerification() {
     }
   };
 
-  // 🔥 paste support
+  
   const handlePaste = (e: React.ClipboardEvent) => {
     const paste = e.clipboardData.getData("text").slice(0, 6);
     if (!/^\d+$/.test(paste)) return;
@@ -59,7 +59,7 @@ export default function OtpVerification() {
     inputsRef.current[5]?.focus();
   };
 
-  // ✅ VERIFY
+  
   const handleVerify = async () => {
     const code = otp.join("");
 
@@ -82,7 +82,7 @@ export default function OtpVerification() {
     }
   };
 
-  // 🔁 RESEND
+  // resend otp 
   const handleResend = async () => {
     if (!email) return;
 
@@ -109,21 +109,21 @@ export default function OtpVerification() {
           Code sent to <span className="font-semibold text-black">{email}</span>
         </p>
 
-        {/* SUCCESS */}
+        {/* success */}
         {message && (
           <div className="mb-4 p-3 text-sm text-green-600 bg-green-50 border border-green-200 rounded-xl">
             {message}
           </div>
         )}
 
-        {/* ERROR */}
+        {/* show error */}
         {error && (
           <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl">
             {error}
           </div>
         )}
 
-        {/* OTP INPUT */}
+        {/* opt field  */}
         <div onPaste={handlePaste} className="flex justify-between gap-3 mb-6">
           {otp.map((digit, index) => (
             <input
@@ -140,7 +140,7 @@ export default function OtpVerification() {
           ))}
         </div>
 
-        {/* VERIFY BUTTON */}
+        
         <button
           onClick={handleVerify}
           disabled={otp.some((d) => d === "") || isLoading}
@@ -156,7 +156,7 @@ export default function OtpVerification() {
           )}
         </button>
 
-        {/* RESEND */}
+        
         <p className="text-center text-sm text-slate-500 mt-6">
           Didn’t receive code?{" "}
           <button

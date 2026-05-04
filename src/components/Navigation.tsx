@@ -10,7 +10,7 @@ export default function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
   const { data } = useSession();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
   const sessionData = data?.user;
 
   const isActive = (path: string) => pathname === path;
@@ -42,7 +42,7 @@ export default function Navigation() {
             </span>
           </Link>
 
-          {/* Desktop Nav */}
+          
           <nav className="hidden md:flex gap-8">
             {sessionData && navLinks.map((link) => (
               <Link
@@ -92,50 +92,13 @@ export default function Navigation() {
               </div>
             )}
 
-            {/* Mobile Menu Toggle */}
-            <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-slate-600 md:hidden hover:bg-slate-50 rounded-lg transition-colors"
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
-      {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-100 shadow-xl p-4 flex flex-col gap-4 animate-in slide-in-from-top-2 duration-200">
-          {sessionData ? (
-            <>
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`p-3 rounded-xl text-sm font-semibold ${
-                    isActive(link.href) ? "bg-indigo-50 text-indigo-600" : "text-slate-600"
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              <hr className="border-slate-100" />
-              <button 
-                onClick={signOut}
-                className="flex items-center gap-3 p-3 text-red-500 font-semibold text-sm"
-              >
-                <LogOut size={18} /> Logout
-              </button>
-            </>
-          ) : (
-            <div className="flex flex-col gap-3">
-              <Link href="/auth/login" className="w-full p-3 text-center font-semibold text-slate-600">Login</Link>
-              <Link href="/auth/register" className="w-full p-3 text-center bg-indigo-600 text-white rounded-xl font-semibold">Register</Link>
-            </div>
-          )}
-        </div>
-      )}
+      
+      
     </header>
   );
 }

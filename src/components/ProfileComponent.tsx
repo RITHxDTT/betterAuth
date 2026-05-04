@@ -49,11 +49,11 @@ export default function ProfileDetails() {
     <div className="w-fullmin-h-screen bg-slate-50 px-6 py-10">
       <div className=" mx-auto bg-white rounded-3xl shadow-lg border border-slate-100 p-8">
 
-        {/* TOP HEADER */}
+        
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-6">
             
-            {/* Avatar */}
+            
             <div className="relative">
               <img
                 src={user.profile_image_url || "https://i.pravatar.cc/150"}
@@ -64,13 +64,13 @@ export default function ProfileDetails() {
               </div>
             </div>
 
-            {/* Name + Info */}
+            
             <div>
               <h1 className="text-2xl font-bold text-slate-900">
                 {user.given_name} {user.family_name}
               </h1>
 
-              {/* badges */}
+              
               <div className="flex gap-2 mt-2">
                 <span className="px-3 py-1 text-xs bg-green-100 text-green-700 rounded-full">
                   {user.role}
@@ -80,7 +80,7 @@ export default function ProfileDetails() {
                 </span>
               </div>
 
-              {/* email + location */}
+              
               <div className="flex gap-6 mt-3 text-sm text-slate-500">
                 <div className="flex items-center gap-2">
                   <Mail size={14} />
@@ -97,7 +97,7 @@ export default function ProfileDetails() {
         
         </div>
 
-        {/* PERSONAL INFO */}
+        
         <h2 className="text-lg font-semibold mb-6">Personal Information</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -116,7 +116,7 @@ export default function ProfileDetails() {
           </div>
         </div>
 
-        {/* FOOTER BUTTON */}
+        
         <div className="flex justify-end mt-10">
           <button className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow">
             Edit Profile
@@ -127,7 +127,7 @@ export default function ProfileDetails() {
   );
 }
 
-/* 🔹 Reusable Field Component */
+
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <div>

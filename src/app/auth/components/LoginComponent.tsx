@@ -28,7 +28,7 @@ export default function SignInPage() {
   try {
     setLoading(true);
 
-    // await handleSignIn({ email, password });
+    
     const data = await handleSignIn({ email, password });
     await refresh();
 
@@ -142,7 +142,7 @@ export default function SignInPage() {
           </form>
         </div>
 
-        {/* RIGHT: DECORATION */}
+        
         <div className="hidden lg:flex flex-col items-center justify-center w-1/2 ml-20 text-center">
           <div className="w-full max-w-md aspect-square bg-indigo-600 rounded-[3rem] rotate-3 flex items-center justify-center relative shadow-2xl">
             <div className="absolute inset-0 bg-white/10 backdrop-blur-3xl rounded-[3rem] -rotate-6" />

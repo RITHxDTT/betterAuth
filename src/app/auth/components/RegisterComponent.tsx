@@ -16,7 +16,7 @@ import {
 import { handleRegister } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 
-// Define validation schema
+
 const registerSchema = z.object({
   firstName: z.string().min(2),
   lastName: z.string().min(2),
@@ -71,7 +71,7 @@ export default function RegisterPage() {
 
   return (
     <div className="relative min-h-screen w-full flex items-center bg-slate-50 overflow-hidden">
-      {/* Background Decoration */}
+      
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-100 rounded-full blur-3xl opacity-50" />
 
       <div className="container mx-auto px-6 lg:px-20 z-10 flex justify-between items-center">
@@ -93,7 +93,7 @@ export default function RegisterPage() {
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {/* First Name */}
+              {/* fisrt name */}
               <div className="space-y-1.5">
                 <label className="text-sm font-semibold text-slate-700 ml-1">
                   First Name
@@ -113,7 +113,7 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              {/* Last Name */}
+              {/* last name */}
               <div className="space-y-1.5">
                 <label className="text-sm font-semibold text-slate-700 ml-1">
                   Last Name
@@ -134,7 +134,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* data of birth */}
+            {/* bod */}
 
             <div className="space-y-1.5">
               <label className="text-sm font-semibold text-slate-700 ml-1">
@@ -247,7 +247,7 @@ export default function RegisterPage() {
           </form>
         </div>
 
-        {/* Decorative Right Panel */}
+        
         <div className="hidden lg:flex flex-col items-center justify-center w-1/2 ml-20 text-center">
           <div className="w-full max-w-md aspect-square bg-indigo-600 rounded-[3rem] rotate-3 flex items-center justify-center relative shadow-2xl">
             <div className="absolute inset-0 bg-white/10 backdrop-blur-3xl rounded-[3rem] -rotate-6" />
